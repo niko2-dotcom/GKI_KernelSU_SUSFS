@@ -401,8 +401,40 @@ jobs:
         clear_stats: true
 
     - name: Initialize Config Fragment
-      run: touch "${{ github.workspace }}/wild_gki.fragment"
-
+      run: |
+        touch "${{ github.workspace }}/wild_gki.fragment"
+        
+        # NetHunter: Podstawy WiFi (wymagane dla wszystkich kart)
+        echo "CONFIG_CFG80211=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_MAC80211=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_CFG80211_WEXT=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        
+        # NetHunter: Dedykowane wsparcie dla TP-Link TL-WN722N V1 (Atheros AR9271)
+        echo "CONFIG_WLAN_VENDOR_ATH=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_ATH_CARDS=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_ATH9K_HTC=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        
+        # NetHunter: BadUSB, Emulacja Klawiatury i Kart Sieciowych USB
+        echo "CONFIG_USB_CONFIGFS=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_USB_CONFIGFS_F_HID=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_USB_CONFIGFS_F_ECM=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_USB_CONFIGFS_F_RNDIS=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_USB_CONFIGFS_F_NCM=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_USB_CONFIGFS_F_MASS_STORAGE=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_USB_CONFIGFS_F_FS=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        
+        # NetHunter: Bluetooth Stack & Zewnętrzne adaptery USB BT
+        echo "CONFIG_BT_RFCOMM=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_BT_RFCOMM_TTY=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_BT_BNEP=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_BT_HIDP=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_BT_HCIBTUSB=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        
+        # NetHunter: Radio SDR & Diagnostyka
+        echo "CONFIG_MEDIA_SDR_SUPPORT=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_DVB_RTL2832=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_IKCONFIG=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_IKCONFIG_PROC=y" >> "${{ github.workspace }}/wild_gki.fragment"
     - name: Build Normal Kernel
       env:
         SOURCE_DATE_EPOCH: ${{ env.SOURCE_DATE_EPOCH }}
