@@ -409,7 +409,7 @@ jobs:
         echo "CONFIG_MAC80211=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_CFG80211_WEXT=y" >> "${{ github.workspace }}/wild_gki.fragment"
         
-                # NetHunter: Dedykowane wsparcie dla TP-Link TL-WN722N V1 (Atheros AR9271)
+        # NetHunter: Dedykowane wsparcie dla TP-Link TL-WN722N V1 (Atheros AR9271)
         echo "CONFIG_WLAN_VENDOR_ATH=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_ATH_CARDS=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_ATH9K_HTC=y" >> "${{ github.workspace }}/wild_gki.fragment"
@@ -437,7 +437,20 @@ jobs:
         echo "CONFIG_DVB_RTL2832=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_IKCONFIG=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_IKCONFIG_PROC=y" >> "${{ github.workspace }}/wild_gki.fragment"
+
+    - name: Apply Config Fragment to Kernel Defconfig
+      shell: bash
+      run: |
+        DEFCONFIG_FILE=$(find ${{ github.workspace }} -name "gki_defconfig" | head -n 1)
+        if [ -f "$DEFCONFIG_FILE" ]; then
+          echo "Znaleziono defconfig: $DEFCONFIG_FILE. Dopisuję ustawienia NetHuntera..."
+          cat "${{ github.workspace }}/wild_gki.fragment" >> "$DEFCONFIG_FILE"
+        else
+          echo "OSTRZEŻENIE: Nie znaleziono gki_defconfig!"
+        fi
+
     - name: Build Normal Kernel
+
       env:
         SOURCE_DATE_EPOCH: ${{ env.SOURCE_DATE_EPOCH }}
         KBUILD_BUILD_TIMESTAMP: ${{ env.KBUILD_BUILD_TIMESTAMP }}
