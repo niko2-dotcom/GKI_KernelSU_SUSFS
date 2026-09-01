@@ -409,10 +409,12 @@ jobs:
         echo "CONFIG_MAC80211=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_CFG80211_WEXT=y" >> "${{ github.workspace }}/wild_gki.fragment"
         
-        # NetHunter: Dedykowane wsparcie dla TP-Link TL-WN722N V1 (Atheros AR9271)
+                # NetHunter: Dedykowane wsparcie dla TP-Link TL-WN722N V1 (Atheros AR9271)
         echo "CONFIG_WLAN_VENDOR_ATH=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_ATH_CARDS=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_ATH9K_HTC=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_ATH9K_HTC_DEBUGFS=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_ATH9K_COMMON_DEBUG=y" >> "${{ github.workspace }}/wild_gki.fragment"
         
         # NetHunter: BadUSB, Emulacja Klawiatury i Kart Sieciowych USB
         echo "CONFIG_USB_CONFIGFS=y" >> "${{ github.workspace }}/wild_gki.fragment"
