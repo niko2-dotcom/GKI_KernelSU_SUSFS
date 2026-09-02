@@ -402,28 +402,28 @@ jobs:
 
     - name: Initialize Config Fragment
       run: |
-        touch "${{ github.workspace }}/wild_gki.fragment"
-        
+        cat << 'EOF' > "${{ github.workspace }}/wild_gki.fragment"
         # NetHunter: Dodajemy TYLKO specyficzne sterowniki (wbudowane =y)
         # Baza GKI (Bluetooth, CFG80211) zostaje nienaruszona by nie psuć paczki Bazela.
         
         # Atheros AR9271 (wbudowane =y, omija błąd module_outs)
-        echo "CONFIG_ATH_CARDS=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_ATH_COMMON=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_ATH9K_HW=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_ATH9K_COMMON=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_ATH9K_HTC=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_ATH9K_HTC_DEBUGFS=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        CONFIG_ATH_CARDS=y
+        CONFIG_ATH_COMMON=y
+        CONFIG_ATH9K_HW=y
+        CONFIG_ATH9K_COMMON=y
+        CONFIG_ATH9K_HTC=y
+        CONFIG_ATH9K_HTC_DEBUGFS=y
         
         # NetHunter: BadUSB (tylko brakujące funkcje, HID i FS są już w GKI)
-        echo "CONFIG_USB_CONFIGFS_F_ECM=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_USB_CONFIGFS_F_RNDIS=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_USB_CONFIGFS_F_NCM=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_USB_CONFIGFS_F_MASS_STORAGE=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        CONFIG_USB_CONFIGFS_F_ECM=y
+        CONFIG_USB_CONFIGFS_F_RNDIS=y
+        CONFIG_USB_CONFIGFS_F_NCM=y
+        CONFIG_USB_CONFIGFS_F_MASS_STORAGE=y
         
         # Diagnostyka
-        echo "CONFIG_IKCONFIG=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_IKCONFIG_PROC=y" >> "${{ github.workspace }}/wild_gki.fragment
+        CONFIG_IKCONFIG=y
+        CONFIG_IKCONFIG_PROC=y
+        EOF
 
     - name: Apply Config Fragment to Kernel Defconfig
       shell: bash
