@@ -404,14 +404,10 @@ jobs:
       run: |
         touch "${{ github.workspace }}/wild_gki.fragment"
         
-        # NetHunter: Podstawy WiFi (wbudowane =y)
-        echo "CONFIG_WLAN=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_CFG80211=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_MAC80211=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_CFG80211_WEXT=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        # NetHunter: Dodajemy TYLKO specyficzne sterowniki (wbudowane =y)
+        # Baza GKI (Bluetooth, CFG80211) zostaje nienaruszona by nie psuć paczki Bazela.
         
-        # NetHunter: Atheros AR9271 (wbudowane =y)
-        echo "CONFIG_WLAN_VENDOR_ATH=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        # Atheros AR9271 (wbudowane =y, omija błąd module_outs)
         echo "CONFIG_ATH_CARDS=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_ATH_COMMON=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_ATH9K_HW=y" >> "${{ github.workspace }}/wild_gki.fragment"
@@ -419,28 +415,15 @@ jobs:
         echo "CONFIG_ATH9K_HTC=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_ATH9K_HTC_DEBUGFS=y" >> "${{ github.workspace }}/wild_gki.fragment"
         
-        # NetHunter: BadUSB i Emulacja Klawiatury (wbudowane =y)
-        echo "CONFIG_USB_CONFIGFS=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_USB_CONFIGFS_F_HID=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        # NetHunter: BadUSB (tylko brakujące funkcje, HID i FS są już w GKI)
         echo "CONFIG_USB_CONFIGFS_F_ECM=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_USB_CONFIGFS_F_RNDIS=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_USB_CONFIGFS_F_NCM=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_USB_CONFIGFS_F_MASS_STORAGE=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_USB_CONFIGFS_F_FS=y" >> "${{ github.workspace }}/wild_gki.fragment"
         
-        # NetHunter: Bluetooth Stack & Zewnętrzne adaptery USB BT (wbudowane =y)
-        echo "CONFIG_BT=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_BT_RFCOMM=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_BT_RFCOMM_TTY=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_BT_BNEP=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_BT_HIDP=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_BT_HCIBTUSB=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_BT_HCIBTINTEL=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_BT_HCIBTRTL=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        
-        # NetHunter: Diagnostyka
+        # Diagnostyka
         echo "CONFIG_IKCONFIG=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_IKCONFIG_PROC=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_IKCONFIG_PROC=y" >> "${{ github.workspace }}/wild_gki.fragment
 
     - name: Apply Config Fragment to Kernel Defconfig
       shell: bash
