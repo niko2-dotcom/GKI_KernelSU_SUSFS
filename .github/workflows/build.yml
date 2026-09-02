@@ -425,14 +425,15 @@ jobs:
         echo "CONFIG_USB_CONFIGFS_F_MASS_STORAGE=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_USB_CONFIGFS_F_FS=y" >> "${{ github.workspace }}/wild_gki.fragment"
         
-        # NetHunter: Bluetooth Stack & Zewnętrzne adaptery USB BT (jako moduły .ko)
-        echo "CONFIG_BT_RFCOMM=m" >> "${{ github.workspace }}/wild_gki.fragment"
+        # NetHunter: Bluetooth Stack & Zewnętrzne adaptery USB BT (wbudowane =y)
+        echo "CONFIG_BT_RFCOMM=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_BT_RFCOMM_TTY=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_BT_BNEP=m" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_BT_HIDP=m" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_BT_HCIBTUSB=m" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_BT_BNEP=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_BT_HIDP=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_BT_HCIBTUSB=y" >> "${{ github.workspace }}/wild_gki.fragment"
         
         # NetHunter: Radio SDR & Diagnostyka
+        echo "CONFIG_MEDIA_SUPPORT=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_MEDIA_SDR_SUPPORT=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_DVB_RTL2832=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_IKCONFIG=y" >> "${{ github.workspace }}/wild_gki.fragment"
@@ -508,11 +509,10 @@ jobs:
             "drivers/media/tuners/mt2131.ko"
         ]
 
-        formatted = "".join([f"        \"{m}\",\n" for m in modules])
-        if "module_outs = [" in content:
-            content = content.replace("module_outs = [", "module_outs = [\n" + formatted)
-        elif "module_outs=[" in content:
-            content = content.replace("module_outs=[", "module_outs=[\n" + formatted)
+        modules_fmt = "module_outs = [\n" + "".join([f"        \"{m}\",\n" for m in modules]) + "    ],\n"
+
+        if "define_common_kernels(" in content:
+            content = content.replace("define_common_kernels(", "define_common_kernels(\n    " + modules_fmt)
 
         with open(file_path, "w") as f:
             f.write(content)
