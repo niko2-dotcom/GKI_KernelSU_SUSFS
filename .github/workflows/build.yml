@@ -425,12 +425,12 @@ jobs:
         echo "CONFIG_USB_CONFIGFS_F_MASS_STORAGE=y" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_USB_CONFIGFS_F_FS=y" >> "${{ github.workspace }}/wild_gki.fragment"
         
-        # NetHunter: Bluetooth Stack & Zewnętrzne adaptery USB BT
-        echo "CONFIG_BT_RFCOMM=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        # NetHunter: Bluetooth Stack & Zewnętrzne adaptery USB BT (jako moduły .ko)
+        echo "CONFIG_BT_RFCOMM=m" >> "${{ github.workspace }}/wild_gki.fragment"
         echo "CONFIG_BT_RFCOMM_TTY=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_BT_BNEP=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_BT_HIDP=y" >> "${{ github.workspace }}/wild_gki.fragment"
-        echo "CONFIG_BT_HCIBTUSB=y" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_BT_BNEP=m" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_BT_HIDP=m" >> "${{ github.workspace }}/wild_gki.fragment"
+        echo "CONFIG_BT_HCIBTUSB=m" >> "${{ github.workspace }}/wild_gki.fragment"
         
         # NetHunter: Radio SDR & Diagnostyka
         echo "CONFIG_MEDIA_SDR_SUPPORT=y" >> "${{ github.workspace }}/wild_gki.fragment"
