@@ -452,10 +452,71 @@ jobs:
     - name: Fix Bazel Module Export
       shell: bash
       run: |
-        cd ${{ github.workspace }}/kernel
-        curl -L https://github.com/bazelbuild/buildtools/releases/latest/download/buildozer-linux-amd64 -o buildozer
-        chmod +x buildozer
-        ./buildozer 'add module_outs drivers/bluetooth/btintel.ko drivers/media/tuners/tda18218.ko drivers/media/tuners/fc0012.ko drivers/media/tuners/tda18212.ko drivers/bluetooth/btrtl.ko drivers/media/tuners/tda18250.ko drivers/media/tuners/fc2580.ko net/wireless/cfg80211.ko drivers/media/tuners/mt20xx.ko drivers/media/tuners/tuner-simple.ko drivers/media/tuners/tda8290.ko drivers/media/tuners/r820t.ko drivers/media/tuners/xc4000.ko drivers/media/tuners/tda9887.ko drivers/net/wireless/ath/ath.ko drivers/media/tuners/tda18271.ko drivers/net/wireless/ath/ath9k/ath9k_htc.ko drivers/media/tuners/tua9001.ko drivers/media/tuners/msi001.ko drivers/media/tuners/mxl301rf.ko drivers/media/tuners/e4000.ko drivers/media/tuners/tuner-types.ko drivers/media/tuners/qt1010.ko net/mac80211/mac80211.ko drivers/media/tuners/tea5767.ko drivers/media/tuners/mxl5007t.ko drivers/media/tuners/xc2028.ko drivers/bluetooth/btusb.ko drivers/media/tuners/qm1d1b0004.ko drivers/media/tuners/mt2266.ko drivers/media/tuners/xc5000.ko drivers/media/tuners/mt2060.ko drivers/media/tuners/fc0013.ko drivers/media/tuners/si2157.ko drivers/net/wireless/ath/ath9k/ath9k_hw.ko drivers/media/tuners/mxl5005s.ko drivers/media/tuners/it913x.ko drivers/media/tuners/mc44s803.ko net/bluetooth/bnep/bnep.ko drivers/media/tuners/tda827x.ko drivers/media/tuners/tea5761.ko drivers/media/tuners/mt2063.ko drivers/net/wireless/ath/ath9k/ath9k_common.ko drivers/media/tuners/m88rs6000t.ko drivers/media/tuners/fc0011.ko drivers/media/tuners/qm1d1c0042.ko drivers/media/tuners/max2165.ko drivers/media/tuners/mt2131.ko' //common:kernel_aarch64
+        python3 -c '
+        file_path = "${{ github.workspace }}/kernel/common/BUILD.bazel"
+        with open(file_path, "r") as f:
+            content = f.read()
+
+        modules = [
+            "drivers/bluetooth/btintel.ko",
+            "drivers/media/tuners/tda18218.ko",
+            "drivers/media/tuners/fc0012.ko",
+            "drivers/media/tuners/tda18212.ko",
+            "drivers/bluetooth/btrtl.ko",
+            "drivers/media/tuners/tda18250.ko",
+            "drivers/media/tuners/fc2580.ko",
+            "net/wireless/cfg80211.ko",
+            "drivers/media/tuners/mt20xx.ko",
+            "drivers/media/tuners/tuner-simple.ko",
+            "drivers/media/tuners/tda8290.ko",
+            "drivers/media/tuners/r820t.ko",
+            "drivers/media/tuners/xc4000.ko",
+            "drivers/media/tuners/tda9887.ko",
+            "drivers/net/wireless/ath/ath.ko",
+            "drivers/media/tuners/tda18271.ko",
+            "drivers/net/wireless/ath/ath9k/ath9k_htc.ko",
+            "drivers/media/tuners/tua9001.ko",
+            "drivers/media/tuners/msi001.ko",
+            "drivers/media/tuners/mxl301rf.ko",
+            "drivers/media/tuners/e4000.ko",
+            "drivers/media/tuners/tuner-types.ko",
+            "drivers/media/tuners/qt1010.ko",
+            "net/mac80211/mac80211.ko",
+            "drivers/media/tuners/tea5767.ko",
+            "drivers/media/tuners/mxl5007t.ko",
+            "drivers/media/tuners/xc2028.ko",
+            "drivers/bluetooth/btusb.ko",
+            "drivers/media/tuners/qm1d1b0004.ko",
+            "drivers/media/tuners/mt2266.ko",
+            "drivers/media/tuners/xc5000.ko",
+            "drivers/media/tuners/mt2060.ko",
+            "drivers/media/tuners/fc0013.ko",
+            "drivers/media/tuners/si2157.ko",
+            "drivers/net/wireless/ath/ath9k/ath9k_hw.ko",
+            "drivers/media/tuners/mxl5005s.ko",
+            "drivers/media/tuners/it913x.ko",
+            "drivers/media/tuners/mc44s803.ko",
+            "net/bluetooth/bnep/bnep.ko",
+            "drivers/media/tuners/tda827x.ko",
+            "drivers/media/tuners/tea5761.ko",
+            "drivers/media/tuners/mt2063.ko",
+            "drivers/net/wireless/ath/ath9k/ath9k_common.ko",
+            "drivers/media/tuners/m88rs6000t.ko",
+            "drivers/media/tuners/fc0011.ko",
+            "drivers/media/tuners/qm1d1c0042.ko",
+            "drivers/media/tuners/max2165.ko",
+            "drivers/media/tuners/mt2131.ko"
+        ]
+
+        formatted = "".join([f"        \"{m}\",\n" for m in modules])
+        if "module_outs = [" in content:
+            content = content.replace("module_outs = [", "module_outs = [\n" + formatted)
+        elif "module_outs=[" in content:
+            content = content.replace("module_outs=[", "module_outs=[\n" + formatted)
+
+        with open(file_path, "w") as f:
+            f.write(content)
+        '
 
     - name: Build Normal Kernel
       env:
